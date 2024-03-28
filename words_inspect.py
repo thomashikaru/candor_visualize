@@ -259,7 +259,7 @@ def make_plot(
 
 
 def main():
-    st.title("Inspecting Words")
+    st.title("Candor Conversation Visualizer")
 
     if "start_t" not in st.session_state:
         st.session_state.start_t = 0
@@ -303,7 +303,8 @@ def main():
 
     context_len = int(
         st.selectbox(
-            "Context Length", options=sorted(filtered_data.context_len.unique())
+            "Context Length (number of previous turns of context used to compute surprisal and entropy)",
+            options=sorted(filtered_data.context_len.unique()),
         )
     )
 
@@ -325,7 +326,7 @@ def main():
         st.session_state.end_t = end_t
 
     times_str = st.text_input(
-        "Time Range",
+        "Time Range (seconds, dash-separated)",
         key="time_range_text_input",
         value=f"{st.session_state.start_t:.0f}-{st.session_state.end_t:.0f}",
         on_change=time_changed,
@@ -339,8 +340,11 @@ def main():
         st.session_state.start_t += 30
         st.session_state.end_t += 30
 
-    col1, col2 = st.columns(2)
+    st.text(
+        "Note: the audio recordings start when the first participant joins the call, so you may need to scrub forward to find the beginning of the conversation."
+    )
 
+    col1, col2 = st.columns(2)
     with col1:
         st.button("<< 30s", on_click=backward)
     with col2:
